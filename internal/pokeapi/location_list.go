@@ -19,7 +19,7 @@ func (c *Client) ListLocations(pageURL *string) (RespLocations, error) {
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return RespLocations{}, nil
+		return RespLocations{}, err
 	}
 	defer resp.Body.Close()
 
