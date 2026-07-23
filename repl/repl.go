@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-func startRepl() {
-	cfg := &config{}
+func startRepl(cfg *config) {
 
 	reader := bufio.NewScanner(os.Stdin)
 
@@ -54,14 +53,6 @@ type cliCommand struct {
 	name        string
 	description string
 	callback    func(*config) error
-}
-
-type locationAreaResponse struct {
-	Next     string `json:"next"`
-	Previous string `json:"previous"`
-	Results  []struct {
-		Name string `json:"name"`
-	} `json:"results"`
 }
 
 func getCommands() map[string]cliCommand {

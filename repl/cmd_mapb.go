@@ -1,36 +1,25 @@
 package main
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
-	"net/http"
 )
 
 func commandMapb(cfg *config) error {
-	if cfg.previousUrl == "" {
-		fmt.Println("you're on the first page")
-		return nil
+	if cfg.previousUrl == nil {
+		return errors.New("you're on the first page")
 	}
-	res, err := http.Get(cfg.previousUrl)
+
+	locationResp, err := cfg.pokeapiClient.ListLocations(cfg.previousUrl)
 	if err != nil {
 		return err
 	}
 
-	defer res.Body.Close()
+	cfg.nextUrl = locationResp.Next
+	cfg.previousUrl = locationResp.Previous
 
-	var data locationAreaResponse
-
-	err = json.NewDecoder(res.Body).Decode(&data)
-	if err != nil {
-		return err
+	for _, loc := range locationResp.Results {
+		fmt.Println(loc.Name)
 	}
-
-	for _, area := range data.Results {
-		fmt.Println(area.Name)
-	}
-
-	cfg.nextUrl = data.Next
-	cfg.previousUrl = data.Previous
-
 	return nil
 }

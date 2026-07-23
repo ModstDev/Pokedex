@@ -1,6 +1,9 @@
 package main
 
+import "github.com/ModstDev/Pokedex/internal/pokeapi"
+
 type config struct {
-	nextUrl     string
-	previousUrl string
+	pokeapiClient pokeapi.Client
+	nextUrl       *string
+	previousUrl   *string
 }
