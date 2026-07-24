@@ -12,7 +12,7 @@ func commandExplore(cfg *config, args []string) error {
 	fmt.Printf("Exploring %s...\n", location)
 
 	//call API
-	pokemonsResp, err := cfg.pokeapiClient.ListPokemons(location)
+	pokemonsResp, err := cfg.pokeapiClient.ExploreLocation(location)
 	if err != nil {
 		fmt.Println("Provided location is incorrect")
 		return err

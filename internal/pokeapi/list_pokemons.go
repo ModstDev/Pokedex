@@ -2,12 +2,13 @@ package pokeapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 )
 
-func (c *Client) ListPokemons(location string) (Location, error) {
+func (c *Client) ExploreLocation(location string) (Location, error) {
 	url := baseURL + "/location-area/"
 	if location != "" {
 		url += location + "/"
@@ -21,7 +22,7 @@ func (c *Client) ListPokemons(location string) (Location, error) {
 
 		err := json.Unmarshal(data, &pokemons)
 		if err != nil {
-			return Location{}, err
+			return Location{}, fmt.Errorf("failed fetching location's pokemons: %w", err)
 		}
 
 		return pokemons, nil
@@ -30,24 +31,24 @@ func (c *Client) ListPokemons(location string) (Location, error) {
 	log.Println("CACHE MISS:", url)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return Location{}, err
+		return Location{}, fmt.Errorf("failed fetching location's pokemons: %w", err)
 	}
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return Location{}, err
+		return Location{}, fmt.Errorf("failed fetching location's pokemons: %w", err)
 	}
 	defer resp.Body.Close()
 
 	data, err = io.ReadAll(resp.Body)
 	if err != nil {
-		return Location{}, err
+		return Location{}, fmt.Errorf("failed fetching location's pokemons: %w", err)
 	}
 
 	pokemonsResp := Location{}
 	err = json.Unmarshal(data, &pokemonsResp)
 	if err != nil {
-		return Location{}, err
+		return Location{}, fmt.Errorf("failed fetching location's pokemons: %w", err)
 	}
 
 	//adding to cache new data from the url
